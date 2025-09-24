@@ -1,0 +1,629 @@
+[
+  {
+    "name": "Açai Cocoa Haze Bowl™",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/ach-bowl-acai-2025.png",
+    "description": "Dive into rich and fruity flavors with nutrient-rich Açaí base topped with Purely Elizabeth® Granola, Diced Strawberries, Sliced Banana, Cocoa Nibs and Chocolate Hazelnut Drizzle.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts"
+    ],
+    "ingredients": [
+      "Açai base",
+      "Purely Elizabeth® Granola",
+      "Diced Strawberries",
+      "Bananas",
+      "Sweetened Cacao Nibs",
+      "Chocolate Hazelnut Drizzle"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 630,
+          "fat": {
+            "amount": 23,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 106,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 6,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 7,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 12,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 62,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 53,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 150,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "Bee Berry Sting™ Bowl",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/bee-berry-sting-bowl-2025.png",
+    "description": "Savor the ripe mango and fresh berries over a pitaya base, topped with a honey drizzle and Purely Elizabeth® Granola.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts"
+    ],
+    "ingredients": [
+      "Pitaya base",
+      "Papaya Juice Blend",
+      "Turbinado",
+      "Strawberries*",
+      "Purely Elizabeth® Granola",
+      "Mangoes",
+      "Diced Strawberries",
+      "Whole Blueberries",
+      "Honey"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 440,
+          "fat": {
+            "amount": 7,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 90,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 7,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 3,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 10,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 72,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 37,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 120,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "Berry Goji Getaway™ Bowl",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/berry-goji-getaway-2025.png",
+    "description": "Spoon into ripe mangoes, fresh strawberries, and coconut over an açai base, topped with a honey drizzle and dried goji berries.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts (Coconut)"
+    ],
+    "ingredients": [
+      "Açai base",
+      "Shredded Coconut",
+      "Mangoes",
+      "Diced Strawberries",
+      "Honey",
+      "Goji Berries"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 540,
+          "fat": {
+            "amount": 18,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 93,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 4,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 8,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 10,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 61,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 49,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 75,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "Coco Colada™ Bowl",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/coco-colada-2025.png",
+    "description": "Savor a smooth Coconut base, topped with Purely Elizabeth® Granola, Diced Strawberries, Diced Pineapple, Whole Blueberries, and a Honey Drizzle.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts (Coconut)",
+      "Tree Nuts"
+    ],
+    "ingredients": [
+      "Coconut Sorbet",
+      "Purely Elizabeth® Granola",
+      "Pineapples",
+      "Diced Strawberries",
+      "Whole Blueberries",
+      "Honey"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 490,
+          "fat": {
+            "amount": 12,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 102,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 3,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 11,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 23,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 65,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 50,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 115,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "Coco Pitaya-Yah Bowl™",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/ach-bowl-pitaya-2025.png",
+    "description": "Spoon your way to sweet and crunchy with a nutrient-rich Pitaya base, Purely Elizabeth® Granola, Shredded Coconut, Diced Strawberries, Cocoa Nibs and Chocolate Hazelnut Drizzle.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts",
+      "Tree Nuts (Coconut)"
+    ],
+    "ingredients": [
+      "Papaya Juice Blend",
+      "Pitaya base",
+      "Strawberries*",
+      "Turbinado",
+      "Purely Elizabeth® Granola",
+      "Diced Strawberries",
+      "Shredded Coconut",
+      "Sweetened Cacao Nibs",
+      "Chocolate Hazelnut Drizzle"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 540,
+          "fat": {
+            "amount": 20,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 85,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 9,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 11,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 14,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 63,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 37,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 135,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "Go Coconuts™ Bowl",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/go-coconuts-2025.png",
+    "description": "Dive into a creamy Coconut base, topped with Purely Elizabeth® Granola, Diced Strawberries, Sliced Bananas, Whole Blueberries, and a Chocolate Hazelnut Drizzle.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts (Coconut)",
+      "Tree Nuts"
+    ],
+    "ingredients": [
+      "Coconut Sorbet",
+      "Purely Elizabeth® Granola",
+      "Diced Strawberries",
+      "Whole Blueberries",
+      "Bananas",
+      "Chocolate Hazelnut Drizzle"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 530,
+          "fat": {
+            "amount": 16,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 103,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 4,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 11,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 24,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 61,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 47,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 125,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "Go Go Goji Crunch™ Bowl",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/acai-bowl-go-go-gogi-crunch-2025.png",
+    "description": "Triple up on berries with strawberries, blueberries and goji berries over an açai base, topped with a honey drizzle and Purely Elizabeth® Granola",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts"
+    ],
+    "ingredients": [
+      "Açai base",
+      "Purely Elizabeth® Granola",
+      "Whole Blueberries",
+      "Diced Strawberries",
+      "Honey",
+      "Goji Berries"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 550,
+          "fat": {
+            "amount": 16,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 100,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 4,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 45,
+            "unit": ".g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 9,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 62,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 53,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 160,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "Hive Five™ Bowl",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/pitaya-hive-five-2025.png",
+    "description": "Go wild with this tropical harmony of ripe mangoes, fresh bananas, and coconut over a pitaya base, topped with a honey drizzle and dried goji berries.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts (Coconut)"
+    ],
+    "ingredients": [
+      "Pitaya base",
+      "Papaya Juice Blend",
+      "Turbinado",
+      "Strawberries*",
+      "Mangoes",
+      "Shredded Coconut",
+      "Goji Berries",
+      "Bananas",
+      "Honey"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 470,
+          "fat": {
+            "amount": 10,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 91,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 7,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 7,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 12,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 74,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 33,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 60,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "PB Delight™ Bowl",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/pitaya-pb-delight-2025.png",
+    "description": "Feast on whole blueberries, fresh bananas, and dried goji berries over a pitaya base, tapped with savory peanut butter drizzle and Purely Elizabeth® Granola.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts",
+      "Peanut"
+    ],
+    "ingredients": [
+      "Pitaya base",
+      "Papaya Juice Blend",
+      "Turbinado",
+      "Strawberries*",
+      "Bananas",
+      "Purely Elizabeth® Granola",
+      "Goji Berries",
+      "Whole Blueberries",
+      "Peanut Butter"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 520,
+          "fat": {
+            "amount": 13,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 93,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 10,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 4,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 12,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 68,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 30,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 180,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "PB Swizzle™ Bowl",
+    "category": "smoothie bowl",
+    "image": "https://cdn.smoothieking.com/images/smoothies/cups/_productSmall/pb-swizzle-2025.png",
+    "description": "Settle into sweet berries and fresh bananas over an açai base, topped with savory peanut butter drizzle and Purely Elizabeth® Granola.",
+    "hasAllergens": true,
+    "allergens": [
+      "Tree Nuts",
+      "Peanut"
+    ],
+    "ingredients": [
+      "Açai base",
+      "Purely Elizabeth® Granola",
+      "Diced Strawberries",
+      "Bananas",
+      "Whole Blueberries",
+      "Peanut Butter"
+    ],
+    "sizeInformation": {
+      "bowl": {
+        "nutritionInformation": {
+          "calories": 620,
+          "fat": {
+            "amount": 22,
+            "unit": "g"
+          },
+          "carbs": {
+            "amount": 103,
+            "unit": "g"
+          },
+          "protein": {
+            "amount": 7,
+            "unit": "g"
+          },
+          "saturated_fat": {
+            "amount": 6,
+            "unit": "g"
+          },
+          "cholesterol": {
+            "amount": 0,
+            "unit": "mg"
+          },
+          "fiber": {
+            "amount": 11,
+            "unit": "g"
+          },
+          "sugar": {
+            "amount": 58,
+            "unit": "g"
+          },
+          "added_sugar": {
+            "amount": 46,
+            "unit": "g"
+          },
+          "sodium": {
+            "amount": 170,
+            "unit": "mg"
+          }
+        }
+      }
+    }
+  }
+]

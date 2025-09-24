@@ -1,0 +1,385 @@
+[
+  {
+    "name": "Loaded Avocado Toast",
+    "category": "Power Eats",
+    "image": "https://cdn.smoothieking.com/images/site/card/_car…90Crop/avacado-toast-2_2025-08-25-142920_whwm.jpg",
+    "ingredients": [
+      "Hearty 8-Grain Bread",
+      "Chunky Avocado Spread",
+      "Everything Bagel Seasoning"
+    ],
+    "nutritionInformation": {
+      "calories": 330,
+      "fat": {
+        "amount": 15,
+        "unit": "g"
+      },
+      "carbs": {
+        "amount": 42,
+        "unit": "g"
+      },
+      "protein": {
+        "amount": 9,
+        "unit": "g"
+      },
+      "saturated_fat": {
+        "amount": 2,
+        "unit": "g"
+      },
+      "trans_fat": {
+        "amount": 0,
+        "unit": "g"
+      },
+      "cholesterol": {
+        "amount": 0,
+        "unit": "mg"
+      },
+      "fiber": {
+        "amount": 8,
+        "unit": "g"
+      },
+      "sugar": {
+        "amount": 6,
+        "unit": "g"
+      },
+      "added_sugar": {
+        "amount": 5,
+        "unit": "g"
+      },
+      "sodium": {
+        "amount": 770,
+        "unit": "mg"
+      },
+      "vitamin D": {
+        "amount": 0,
+        "unit": "mcg"
+      },
+      "calcium": {
+        "amount": 50,
+        "unit": "mg"
+      },
+      "iron": {
+        "amount": 2.3,
+        "unit": "mg"
+      },
+      "potassium": {
+        "amount": 360,
+        "unit": "mg"
+      }
+    },
+    "allergens": ["Milk", "Sesame", "Soy", "Wheat"],
+    "hasAllergens": true,
+    "servingSize": "1 Serving",
+    "description": "100% avocado spread over toasted 8 grain bread and topped with everything seasoning."
+  },
+  {
+    "name": "Loaded Peanut Butter Toast",
+    "category": "Power Eats",
+    "image": "https://cdn.smoothieking.com/images/site/card/_card610x490Crop/peanut-butter-2_2025-08-25-142921_exyu.jpg",
+    "ingredients": [
+      "Hearty 8-Grain Bread",
+      "Bananas",
+      "Peanut Butter",
+      "Strawberries",
+      "Honey",
+      "Blueberries"
+    ],
+    "nutritionInformation": {
+      "calories": 420,
+      "fat": {
+        "amount": 15,
+        "unit": "g"
+      },
+      "carbs": {
+        "amount": 63,
+        "unit": "g"
+      },
+      "protein": {
+        "amount": 13,
+        "unit": "g"
+      },
+      "saturated_fat": {
+        "amount": 2.5,
+        "unit": "g"
+      },
+      "trans_fat": {
+        "amount": 0,
+        "unit": "g"
+      },
+      "cholesterol": {
+        "amount": 0,
+        "unit": "mg"
+      },
+      "fiber": {
+        "amount": 8,
+        "unit": "g"
+      },
+      "sugar": {
+        "amount": 24,
+        "unit": "g"
+      },
+      "added_sugar": {
+        "amount": 13,
+        "unit": "g"
+      },
+      "sodium": {
+        "amount": 480,
+        "unit": "mg"
+      },
+      "vitamin D": {
+        "amount": 0,
+        "unit": "mcg"
+      },
+      "calcium": {
+        "amount": 50,
+        "unit": "mg"
+      },
+      "iron": {
+        "amount": 2.8,
+        "unit": "mg"
+      },
+      "potassium": {
+        "amount": 530,
+        "unit": "mg"
+      }
+    },
+    "allergens": ["Milk", "Sesame", "Soy", "Peanuts", "Wheat"],
+    "hasAllergens": true,
+    "servingSize": "1 Serving",
+    "description": "All-natural peanut butter spread over toasted 8 grain bread, topped with fresh blueberries, strawberries and bananas, with a drizzle of honey."
+  },
+  {
+    "name": "Loaded Chocolate Hazelnut Toast",
+    "category": "Power Eats",
+    "image": "https://cdn.smoothieking.com/images/site/card/_card610x490Crop/hazelnut-butter-2_2025-08-25-142920_hoft.jpg",
+    "ingredients": [
+      "Hearty 8-Grain Bread",
+      "Strawberries",
+      "Chocolate Hazelnut Drizzle",
+      "Blueberries",
+      "Granola"
+    ],
+    "nutritionInformation": {
+      "calories": 380,
+      "fat": {
+        "amount": 13,
+        "unit": "g"
+      },
+      "carbs": {
+        "amount": 61,
+        "unit": "g"
+      },
+      "protein": {
+        "amount": 11,
+        "unit": "g"
+      },
+      "saturated_fat": {
+        "amount": 2,
+        "unit": "g"
+      },
+      "trans_fat": {
+        "amount": 0,
+        "unit": "g"
+      },
+      "cholesterol": {
+        "amount": 0,
+        "unit": "mg"
+      },
+      "fiber": {
+        "amount": 8,
+        "unit": "g"
+      },
+      "sugar": {
+        "amount": 22,
+        "unit": "g"
+      },
+      "added_sugar": {
+        "amount": 16,
+        "unit": "g"
+      },
+      "sodium": {
+        "amount": 470,
+        "unit": "mg"
+      },
+      "vitamin D": {
+        "amount": 0,
+        "unit": "mcg"
+      },
+      "calcium": {
+        "amount": 40,
+        "unit": "mg"
+      },
+      "iron": {
+        "amount": 2.5,
+        "unit": "mg"
+      },
+      "potassium": {
+        "amount": 260,
+        "unit": "mg"
+      }
+    },
+    "allergens": [
+      "Milk",
+      "Sesame",
+      "Soy",
+      "Tree Nuts (Hazelnut, Coconut)",
+      "Wheat"
+    ],
+    "hasAllergens": true,
+    "servingSize": "1 Serving",
+    "description": "Chocolate hazelnut spread over toasted 8 grain bread, with fresh blueberries and strawberries, then topped with Purely Elizabeth granola."
+  },
+  {
+    "name": "Eggs & Cheese Protein Box",
+    "category": "Power Eats",
+    "image": "https://cdn.smoothieking.com/images/site/card/_card610x490Crop/protein-pack-egg-and-cheese-2.jpg",
+    "ingredients": [
+      "Hard-Boiled Egg",
+      "Cheese Cubes (Cheddar Cheese [Cultured Pasteurized Milk, Salt, Enzymes, Annatto], Monterey Jack Cheese [Cultured Pasteurized Milk, Salt, Enzymes], Monterey Jack Cheese with Jalapeno Peppers [Cultured Pasteurized Milk, Salt, Red and Green Jalapeno Peppers, Enzymes])",
+      "Strawberries",
+      "Flax & Sea Salt Crackers (Unbleached Enriched Wheat Flour [Unbleached Wheat Flour, Ascorbic Acid, Niacin [Vitamin B-3], Iron [Ferrous Sulphate], Thiamin Mononitrate [Vitamin B-1], Riboflavin [Vitamin B-2], Folic Acid], Flax Seeds, Extra Virgin Olive Oil, Organic Cane Sugar, Sea Salt, Baking Powder [Sodium Acid Pyrophosphate, Sodium Bicarbonate, Corn Starch, Monocalcium Phosphate], Rosemary Extract, Filtered Water)",
+      "Blueberries",
+      "Salt Packet (Salt, Sodium Silicoaluminate, Dextrose, Sodium Thiosulfate, Potassium Iodide)",
+      "Pepper Packet (Ground Black Pepper)"
+    ],
+    "nutritionInformation": {
+      "calories": 460,
+      "fat": {
+        "amount": 30,
+        "unit": "g"
+      },
+      "carbs": {
+        "amount": 23,
+        "unit": "g"
+      },
+      "protein": {
+        "amount": 26,
+        "unit": "g"
+      },
+      "saturated_fat": {
+        "amount": 13,
+        "unit": "g"
+      },
+      "trans_fat": {
+        "amount": 1,
+        "unit": "g"
+      },
+      "cholesterol": {
+        "amount": 405,
+        "unit": "mg"
+      },
+      "fiber": {
+        "amount": 3,
+        "unit": "g"
+      },
+      "sugar": {
+        "amount": 6,
+        "unit": "g"
+      },
+      "added_sugar": {
+        "amount": 2,
+        "unit": "g"
+      },
+      "sodium": {
+        "amount": 1110,
+        "unit": "mg"
+      },
+      "vitamin D": {
+        "amount": 1.9,
+        "unit": "mcg"
+      },
+      "calcium": {
+        "amount": 430,
+        "unit": "mg"
+      },
+      "iron": {
+        "amount": 3.8,
+        "unit": "mg"
+      },
+      "potassium": {
+        "amount": 250,
+        "unit": "mg"
+      }
+    },
+    "allergens": ["Egg", "Milk", "Wheat"],
+    "hasAllergens": true,
+    "servingSize": "1 Serving",
+    "description": "2 hard-boiled eggs, cheddar, monterey & pepper jack cheese, fresh strawberries and blueberries with flax & sea salt crackers."
+  },
+  {
+    "name": "Peanut Butter Protein Box",
+    "category": "Power Eats",
+    "image": "https://cdn.smoothieking.com/images/site/card/_card610x490Crop/protein-pack-peanut-butter-2.jpg",
+    "ingredients": [
+      "Cheese Cubes (Cheddar Cheese [Cultured Pasteurized Milk, Salt, Enzymes, Annatto], Monterey Jack Cheese [Cultured Pasteurized Milk, Salt, Enzymes], Monterey Jack Cheese with Jalapeno Peppers [Cultured Pasteurized Milk, Salt, Red and Green Jalapeno Peppers, Enzymes])",
+      "Strawberries",
+      "Flax & Sea Salt Crackers (Unbleached Enriched Wheat Flour [Unbleached Wheat Flour, Ascorbic Acid, Niacin [Vitamin B-3], Iron [Ferrous Sulphate], Thiamin Mononitrate [Vitamin B-1], Riboflavin [Vitamin B-2], Folic Acid], Flax Seeds, Extra Virgin Olive Oil, Organic Cane Sugar, Sea Salt, Baking Powder [Sodium Acid Pyrophosphate, Sodium Bicarbonate, Corn Starch, Monocalcium Phosphate], Rosemary Extract, Filtered Water)",
+      "Blueberries",
+      "BBQ Seasoned Beef Stick (Beef, Molasses Powder, Sea Salt, and Less Than 2% of Sugar, Spices [Including Mustard], Paprika, Tamarind Powder, Cultured Celery Powder, Cherry Powder, Onion Powder, Garlic Powder, Lactic Acid Starter Culture [Not From Milk]. Encased in a Colored Beef Collagen Casing)",
+      "Honey Peanut Butter (Dry Roasted Peanuts, Organic Honey, Organic Cane Sugar, Peanut Oil, Palm Oil, Sea Salt)"
+    ],
+    "nutritionInformation": {
+      "calories": 500,
+      "fat": {
+        "amount": 34,
+        "unit": "g"
+      },
+      "carbs": {
+        "amount": 26,
+        "unit": "g"
+      },
+      "protein": {
+        "amount": 21,
+        "unit": "g"
+      },
+      "saturated_fat": {
+        "amount": 14,
+        "unit": "g"
+      },
+      "trans_fat": {
+        "amount": 1,
+        "unit": "g"
+      },
+      "cholesterol": {
+        "amount": 55,
+        "unit": "mg"
+      },
+      "fiber": {
+        "amount": 4,
+        "unit": "g"
+      },
+      "sugar": {
+        "amount": 8,
+        "unit": "g"
+      },
+      "added_sugar": {
+        "amount": 5,
+        "unit": "g"
+      },
+      "sodium": {
+        "amount": 1020,
+        "unit": "mg"
+      },
+      "vitamin D": {
+        "amount": 0,
+        "unit": "mcg"
+      },
+      "calcium": {
+        "amount": 400,
+        "unit": "mg"
+      },
+      "iron": {
+        "amount": 2.8,
+        "unit": "mg"
+      },
+      "potassium": {
+        "amount": 200,
+        "unit": "mg"
+      }
+    },
+    "allergens": ["Milk", "Peanuts", "Wheat"],
+    "hasAllergens": true,
+    "servingSize": "1 Serving",
+    "description": "Honey peanut butter, fresh berries, BBQ beef stick, mix of cheeses with flax and sea salt crackers."
+  }
+]
