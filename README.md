@@ -156,8 +156,7 @@ node scripts/upload-to-pinecone.js
 ```env
 OPENAI_API_KEY=sk-...
 PINECONE_API_KEY=...
-PINECONE_INDEX_NAME=nutrition-information
-VOYAGE_API_KEY=... # For reranking
+PINECONE_INDEX_NAME=...
 ```
 
 ## 📝 Local Development
