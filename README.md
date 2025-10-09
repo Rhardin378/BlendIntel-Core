@@ -1,12 +1,26 @@
 # BlendIntel Core
 
-An intelligent nutrition search and recommendation system for Smoothie King menu items, powered by advanced RAG (Retrieval-Augmented Generation) architecture.
+An intelligent nutrition search and recommendation system for Smoothie King menu items, powered by advanced RAG (Retrieval-Augmented Generation) architecture with voice-enabled search and FDA-compliant nutrition visualization.
 
 ## 🎯 Overview
 
-BlendIntel Core transforms natural language nutrition queries into personalized smoothie recommendations by combining vector search, semantic reranking, and conversational AI. Users can ask questions like _"What's a high-protein smoothie with strawberries?"_ and receive accurate, context-aware suggestions with complete nutritional information.
+BlendIntel Core transforms natural language nutrition queries into personalized smoothie recommendations by combining vector search, semantic reranking, and conversational AI. Users can **speak or type** questions like _"What's a high-protein smoothie with strawberries?"_ and receive accurate, context-aware suggestions with complete nutritional information displayed in familiar FDA nutrition label format.
 
 ## ✨ Key Features
+
+### 🎤 **Voice-Enabled Search**
+
+- **Whisper API Integration**: Hands-free search using OpenAI's speech-to-text model
+- **Mobile-Optimized**: Perfect for gym users who need quick nutrition info
+- **Natural Language Processing**: Speak naturally - "I need something high in protein after my workout"
+- **Real-time Transcription**: See your spoken query transcribed instantly
+
+### 🏷️ **FDA-Compliant Nutrition Labels**
+
+- **Pixel-Perfect Rendering**: Professionally formatted nutrition facts display
+- **Daily Value Calculations**: Automatic % DV based on 2,000 calorie diet
+- **Size-Aware Display**: Shows nutrition for selected serving size (20oz, 32oz, 44oz)
+- **Visual Impact**: Instantly recognizable format builds user trust
 
 ### 🔍 **Semantic Search with RAG**
 
@@ -29,7 +43,9 @@ BlendIntel Core transforms natural language nutrition queries into personalized 
 ## 🏗️ Architecture
 
 ```
-User Query
+User Input (Voice/Text)
+    ↓
+[Whisper API] → Transcription (if voice)
     ↓
 [OpenAI Embeddings] → Query Vector (512d)
     ↓
@@ -39,12 +55,41 @@ User Query
     ↓
 [GPT-3.5 Turbo] → Natural Language Response
     ↓
-API Response: {
-  topRecommendation: { ... },
-  topThree: [ ... ],
-  aiResponse: "...",
-  allResults: [ ... ]
-}
+Frontend Display:
+  - AI Conversational Response
+  - FDA Nutrition Label
+  - Top 3 Alternative Cards
+```
+
+## 🎨 User Experience Flow
+
+### Voice Search Flow
+
+```
+1. User holds mic button → 🎤 "High protein smoothie with strawberries"
+2. Whisper transcribes → "High protein smoothie with strawberries"
+3. RAG pipeline processes → Gladiator® Strawberry found
+4. Display results:
+   ┌─────────────────────────────────┐
+   │ AI: "Perfect choice! The        │
+   │ Gladiator® Strawberry has       │
+   │ exactly 45g of protein..."      │
+   ├─────────────────────────────────┤
+   │   Nutrition Facts               │
+   │   Serving Size: 32 oz           │
+   │   Calories           220        │
+   │   Protein 45g              90%  │
+   │   ...                           │
+   └─────────────────────────────────┘
+```
+
+### Text Search Flow
+
+```
+1. User types → "Low calorie high protein"
+2. RAG pipeline processes
+3. Display nutrition label for Original High Protein Banana
+4. Show 2 alternatives with quick comparison
 ```
 
 ## 📊 Data Pipeline
@@ -94,8 +139,13 @@ node scripts/upload-to-pinecone.js
     "name": "Gladiator® Strawberry",
     "nutrition_protein": 45,
     "nutrition_calories": 220,
+    "nutrition_carbs": 3,
+    "nutrition_fat": 3,
+    "nutrition_sugar": 1,
+    "nutrition_fiber": 1,
     "allergens": ["Egg", "Milk"],
-    "availableSizes": ["small(20 oz)", "medium(32 oz)", "large(44 oz)"]
+    "availableSizes": ["small(20 oz)", "medium(32 oz)", "large(44 oz)"],
+    "nutritionSize": "medium(32 oz)"
   },
   "topThree": [ ... ],
   "aiResponse": "Great choice! The Gladiator® Strawberry is perfect for your request with exactly 45g of protein...",
@@ -103,61 +153,106 @@ node scripts/upload-to-pinecone.js
 }
 ```
 
+### `POST /api/transcribe`
+
+**Request:**
+
+```
+FormData: { audio: File (webm/mp3) }
+```
+
+**Response:**
+
+```json
+{
+  "transcript": "High protein smoothie with strawberries"
+}
+```
+
 ## 🛠️ Tech Stack
 
-| Component      | Technology                     | Purpose                          |
-| -------------- | ------------------------------ | -------------------------------- |
-| **Framework**  | Next.js 14 (App Router)        | API routes + future frontend     |
-| **Vector DB**  | Pinecone (Serverless)          | Semantic search at scale         |
-| **Embeddings** | OpenAI text-embedding-3-small  | 512d vectors, $0.00002/1K tokens |
-| **Reranker**   | Voyage AI (bge-reranker-v2-m3) | Precision relevance scoring      |
-| **LLM**        | OpenAI GPT-3.5 Turbo           | Natural language responses       |
-| **Language**   | TypeScript/JavaScript          | Type-safe development            |
+| Component         | Technology                     | Purpose                           |
+| ----------------- | ------------------------------ | --------------------------------- |
+| **Framework**     | Next.js 14 (App Router)        | Full-stack React framework        |
+| **Frontend**      | React + TypeScript             | Type-safe UI components           |
+| **Styling**       | Tailwind CSS                   | Responsive, utility-first styling |
+| **Vector DB**     | Pinecone (Serverless)          | Semantic search at scale          |
+| **Embeddings**    | OpenAI text-embedding-3-small  | 512d vectors, $0.00002/1K tokens  |
+| **Reranker**      | Voyage AI (bge-reranker-v2-m3) | Precision relevance scoring       |
+| **LLM**           | OpenAI GPT-3.5 Turbo           | Natural language responses        |
+| **Voice-to-Text** | OpenAI Whisper API             | Speech transcription              |
+| **Language**      | TypeScript/JavaScript          | Type-safe development             |
 
 ## 📈 Performance Metrics
 
-- **Vector Search Latency**: ~50-100ms
-- **Reranking Latency**: ~200-400ms
-- **Total Response Time**: ~500-800ms
-- **Cost per Query**: ~$0.0005 (embeddings + rerank + GPT-3.5)
-- **Accuracy**: 95%+ relevant top-1 results on complex queries
-
-## 🔮 Planned Features
-
-### Phase 1: Frontend (In Progress)
-
-- **Dual-mode interface**: Conversational chat + Advanced filters
-- **Nutrition label renderer**: FDA-compliant visual display
-- **Chat history**: Persistent conversation context
-
-### Phase 2: Customization Engine
-
-- **Gladiator scaling rules**: Protein multipliers for size upgrades
-- **Add-on calculations**: Dynamic nutrition recalculation
-- **Custom modifications**: "Extra banana", "No turbinado", etc.
-
-### Phase 3: Enhanced Intelligence
-
-- **Dietary filters**: Vegan, keto, low-sugar presets
-- **Workout integration**: Post-gym vs. meal replacement recommendations
-- **Trend analysis**: Popular queries, seasonal favorites
+| Metric                   | Value       | Notes                                     |
+| ------------------------ | ----------- | ----------------------------------------- |
+| **Vector Search**        | ~50-100ms   | Pinecone serverless latency               |
+| **Reranking**            | ~200-400ms  | BGE cross-encoder processing              |
+| **Voice Transcription**  | ~500-1000ms | Depends on audio length                   |
+| **Total Response Time**  | ~1-2s       | Voice to results display                  |
+| **Cost per Voice Query** | ~$0.001     | Whisper ($0.006/min) + RAG ($0.0005)      |
+| **Cost per Text Query**  | ~$0.0005    | Embeddings + rerank + GPT-3.5             |
+| **Accuracy**             | 95%+        | Relevant top-1 results on complex queries |
 
 ## 🧪 Example Queries
 
-| Query                                  | Top Result                                  | Why It Works                        |
-| -------------------------------------- | ------------------------------------------- | ----------------------------------- |
-| _"45g protein with strawberries"_      | Gladiator® Strawberry (45g)                 | Exact protein match + ingredient    |
-| _"Low calorie high protein"_           | Original High Protein Banana (330 cal, 27g) | Optimizes both constraints          |
-| _"Pineapple smoothie for energy"_      | Pure Recharge® Pineapple                    | Category + ingredient match         |
-| _"Nut-free option under 300 calories"_ | The Activator® Recovery (280 cal)           | Allergen exclusion + calorie filter |
+| Query                                  | Input Method | Top Result                                  | Why It Works                        |
+| -------------------------------------- | ------------ | ------------------------------------------- | ----------------------------------- |
+| _"45g protein with strawberries"_      | Voice        | Gladiator® Strawberry (45g)                 | Exact protein match + ingredient    |
+| _"Low calorie high protein"_           | Text         | Original High Protein Banana (330 cal, 27g) | Optimizes both constraints          |
+| _"Something for after the gym"_        | Voice        | The Activator® Recovery                     | Context-aware (post-workout)        |
+| _"Nut-free option under 300 calories"_ | Text         | Power Punch Plus® (280 cal)                 | Allergen exclusion + calorie filter |
+
+## 🎨 Frontend Components
+
+### Key React Components
+
+```typescript
+// Voice search with hold-to-record
+<VoiceSearch onSearch={handleSearch} />
+
+// FDA-compliant nutrition label
+<NutritionLabel smoothie={topRecommendation} />
+
+// AI response display
+<ConversationalResponse text={aiResponse} />
+
+// Alternative smoothie cards
+<AlternativeCards smoothies={topThree} />
+```
+
+### Nutrition Label Features
+
+- ✅ FDA-compliant formatting
+- ✅ % Daily Value calculations
+- ✅ Responsive design (mobile-first)
+- ✅ Allergen warnings highlighted
+- ✅ Serving size selector
+
+### Voice Input Features
+
+- ✅ Hold-to-record button (desktop/mobile)
+- ✅ Visual recording indicator
+- ✅ Real-time transcription display
+- ✅ Automatic search trigger
+- ✅ Fallback to text input
 
 ## 🔐 Environment Variables
 
 ```env
+# OpenAI (embeddings, GPT-3.5, Whisper)
 OPENAI_API_KEY=sk-...
+
+# Pinecone Vector Database
 PINECONE_API_KEY=...
 PINECONE_INDEX_NAME=nutrition-information
-VOYAGE_API_KEY=... # For reranking
+
+# Voyage AI (reranking)
+VOYAGE_API_KEY=...
+
+# Optional: Analytics
+NEXT_PUBLIC_GA_ID=...
 ```
 
 ## 📝 Local Development
@@ -166,73 +261,125 @@ VOYAGE_API_KEY=... # For reranking
 # Install dependencies
 npm install
 
-# Generate embeddings
+# Generate embeddings (one-time setup)
 node scripts/embed.js
 
-# Upload to Pinecone
+# Upload to Pinecone (one-time setup)
 node scripts/upload-to-pinecone.js
 
-# Start dev server
+# Start development server
 npm run dev
 
-# Test endpoint
+# Open http://localhost:3000
+```
+
+### Testing the API
+
+**Text Search:**
+
+```bash
 curl -X POST http://localhost:3000/api/nutritionSearchRerank \
   -H "Content-Type: application/json" \
   -d '{"query":"high protein smoothie","topK":5}'
 ```
 
+**Voice Transcription:**
+
+```bash
+curl -X POST http://localhost:3000/api/transcribe \
+  -F "audio=@recording.webm"
+```
+
+## 🚀 Deployment
+
+### Vercel Deployment (Recommended)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+
+# Set environment variables in Vercel dashboard
+```
+
+### Environment Setup
+
+1. Add all API keys to Vercel project settings
+2. Ensure Pinecone index is created and populated
+3. Test voice recording in production (requires HTTPS)
+
 ## 🎓 Learning Outcomes
 
 This project demonstrates:
 
+### Backend/AI Engineering
+
 - ✅ Production RAG architecture (retrieve → rerank → generate)
 - ✅ Vector database optimization (metadata sanitization, chunking)
-- ✅ Multi-model orchestration (embeddings + reranker + LLM)
+- ✅ Multi-model orchestration (embeddings + reranker + LLM + Whisper)
 - ✅ Cost-effective AI (strategic model selection)
-- ✅ Semantic search vs. keyword search trade-offs
 - ✅ Real-world data pipeline (scraping → embedding → indexing)
+
+### Frontend/UX Engineering
+
+- ✅ Accessible voice input implementation
+- ✅ FDA-compliant nutrition visualization
+- ✅ Responsive, mobile-first design
+- ✅ Real-time user feedback (recording states, loading indicators)
+- ✅ Progressive enhancement (voice OR text input)
+
+### Full-Stack Integration
+
+- ✅ Next.js 14 App Router patterns
+- ✅ TypeScript type safety across stack
+- ✅ API route design for AI services
+- ✅ Client-side audio recording and processing
+- ✅ Multimodal user interfaces
+
+## 🔮 Future Enhancements
+
+### Phase 2: Customization Engine
+
+- **Gladiator scaling rules**: Protein multipliers for size upgrades
+- **Add-on calculations**: Dynamic nutrition recalculation for "extra banana", "extra protein"
+- **Custom modifications**: Handle "no turbinado", "substitute almond milk"
+
+### Phase 3: Enhanced Intelligence
+
+- **Dietary presets**: Auto-detect vegan, keto, low-sugar queries
+- **Workout timing**: Optimize for pre-workout vs. post-workout vs. meal replacement
+- **Personalization**: Save user preferences and favorite smoothies
+- **Trend analysis**: Surface popular smoothies and seasonal recommendations
+
+### Phase 4: Advanced Features
+
+- **Compare mode**: Side-by-side nutrition comparison
+- **Meal planning**: Multi-smoothie combinations for daily nutrition goals
+- **Location finder**: Nearest Smoothie King with real-time inventory
+- **Social sharing**: Share favorite smoothies with nutrition info
+
+## 📊 Project Statistics
+
+- **Smoothies Indexed**: 100+
+- **Vector Dimensions**: 512
+- **Average Query Time**: 1-2 seconds (voice), 0.5-0.8 seconds (text)
+
+### Contribution Ideas
+
+- Add more nutrition data sources (bowls, snacks)
+- Implement compare mode
+- Add dietary restriction filters in UI
+- Improve voice recognition accuracy with custom prompts
+- Create mobile app version (React Native)
 
 ## 📄 License
 
 MIT
 
-## 🤝 Contributing
-
-Issues and PRs welcome! This is a learning project exploring modern RAG patterns.
-
 ---
 
 **Built with ❤️ for nutrition-conscious smoothie lovers**
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+_Combining the power of RAG, voice AI, and thoughtful UX design to make healthy choices effortless._
