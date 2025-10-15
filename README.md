@@ -246,6 +246,7 @@ OPENAI_API_KEY=sk-...
 
 # Pinecone Vector Database
 PINECONE_API_KEY=...
+<<<<<<< HEAD
 PINECONE_INDEX_NAME=nutrition-information
 
 # Voyage AI (reranking)
@@ -253,6 +254,9 @@ VOYAGE_API_KEY=...
 
 # Optional: Analytics
 NEXT_PUBLIC_GA_ID=...
+=======
+PINECONE_INDEX_NAME=...
+>>>>>>> 27b65cb9c9f5328b01af549c25ab13d69fb65254
 ```
 
 ## 📝 Local Development
