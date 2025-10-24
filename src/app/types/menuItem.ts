@@ -19,7 +19,7 @@ export interface MenuItem {
 export interface SearchResponse {
   query: string;
   topRecommendation: MenuItem;
-  topThree: MenuItem[];
+  topFive: MenuItem[];
   allResults: MenuItem[];
   aiResponse: string;
   reranked: boolean;

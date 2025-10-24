@@ -9,15 +9,40 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, topK = 10 } = await request.json();
+    const { query, topK = 10, category = "all" } = await request.json();
 
     const queryEmbedding = await createEmbedding(query, 512);
+
+    // Build Pinecone filter based on category
+    let filter = undefined;
+    if (category !== "all") {
+      if (category === "smoothies") {
+        // Exclude bowls and power eats - handle both cases
+        filter = {
+          $and: [
+            { category: { $nin: ["Smoothie Bowl", "smoothie bowl"] } }, // ✅ Both cases
+            { category: { $ne: "Power Eats" } },
+          ],
+        };
+      } else if (category === "bowls") {
+        // Match both "Smoothie Bowl" and "smoothie bowl"
+        filter = {
+          category: { $in: ["Smoothie Bowl", "smoothie bowl"] }, // ✅ Both cases
+        };
+      } else if (category === "power-eats") {
+        // Only Power Eats category
+        filter = {
+          category: "Power Eats",
+        };
+      }
+    }
 
     const results = await queryVectors(
       "nutrition-information",
       queryEmbedding,
       topK * 3,
-      true
+      true,
+      filter
     );
 
     // Prepare documents with rich text
@@ -45,10 +70,8 @@ export async function POST(request: NextRequest) {
         .join(" | "),
     }));
 
-    // ADD THIS: Call rerank
     const reranked = await rerank(query, documents, topK);
 
-    // ADD THIS: Map reranked results back to full metadata
     const rankedDocs = reranked.data.map((item: any) => {
       const original = results.find((r: any) => r.id === item.document.id);
       return {
@@ -71,8 +94,17 @@ export async function POST(request: NextRequest) {
       };
     });
 
-    // Generate human-friendly response with GPT-3.5
-    const topThreeResults = rankedDocs.slice(0, 3); // Get the best match
+    const topFiveResults = rankedDocs.slice(0, 5);
+
+    // Better category name for GPT
+    const categoryDisplayName =
+      category === "all"
+        ? "items"
+        : category === "smoothies"
+        ? "smoothies"
+        : category === "bowls"
+        ? "smoothie bowls"
+        : "power eats";
 
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -80,15 +112,15 @@ export async function POST(request: NextRequest) {
         {
           role: "system",
           content:
-            "You are a helpful nutrition assistant at Smoothie King. Provide friendly, concise recommendations based on the smoothie options found. Focus on how well they match the customer's request.",
+            "You are a helpful nutrition assistant at Smoothie King. Provide friendly, concise recommendations based on the options found. Focus on how well they match the customer's request.",
         },
         {
           role: "user",
-          content: `Customer asked: "${query}"\n\nTop 3 recommendations:\n${JSON.stringify(
-            topThreeResults,
+          content: `Customer asked: "${query}"\n\nTop 5 ${categoryDisplayName}:\n${JSON.stringify(
+            topFiveResults,
             null,
             2
-          )}\n\nProvide a brief, friendly response explaining why these top 3 smoothies are a great match for their request. Mention key nutrition facts and any important allergen information.`,
+          )}\n\nProvide a brief, friendly response explaining why these top 5 ${categoryDisplayName} are a great match for their request. Mention key nutrition facts and any important allergen information.`,
         },
       ],
       temperature: 0.7,
@@ -97,12 +129,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       query,
-      // Raw data for nutrition label rendering
-      topRecommendation: topThreeResults[0],
-      topThree: topThreeResults,
+      category,
+      topRecommendation: topFiveResults[0],
+      topFive: topFiveResults,
       allResults: rankedDocs,
       total: rankedDocs.length,
-      // Human-readable response for chat interface
       aiResponse: response.choices[0].message.content,
       reranked: true,
     });

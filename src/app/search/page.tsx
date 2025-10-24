@@ -2,6 +2,52 @@
 import Image from "next/image";
 import { useState } from "react";
 import { SearchResponse } from "../types/menuItem";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+
+type CategoryType = "all" | "smoothies" | "bowls" | "power-eats";
+
+// Helper function to get category colors
+const getCategoryColor = (category: string) => {
+  const lower = category.toLowerCase();
+
+  if (lower.includes("bowl")) {
+    return "bg-purple-100 text-purple-700 border-purple-200";
+  } else if (lower === "power eats") {
+    return "bg-orange-100 text-orange-700 border-orange-200";
+  } else if (lower.includes("fit") || lower.includes("protein")) {
+    return "bg-blue-100 text-blue-700 border-blue-200";
+  } else if (lower.includes("treat") || lower.includes("indulge")) {
+    return "bg-pink-100 text-pink-700 border-pink-200";
+  } else if (lower.includes("energize") || lower.includes("energy")) {
+    return "bg-yellow-100 text-yellow-700 border-yellow-200";
+  } else if (lower.includes("well") || lower.includes("immune")) {
+    return "bg-green-100 text-green-700 border-green-200";
+  } else if (lower.includes("slim") || lower.includes("weight")) {
+    return "bg-teal-100 text-teal-700 border-teal-200";
+  } else if (lower.includes("regular")) {
+    return "bg-amber-100 text-amber-700 border-amber-200";
+  }
+
+  return "bg-gray-100 text-gray-700 border-gray-200";
+};
+
+// Helper function to get category emoji
+const getCategoryEmoji = (category: string) => {
+  const lower = category.toLowerCase();
+
+  if (lower.includes("bowl")) return "🍓";
+  if (lower === "power eats") return "💪";
+  if (lower.includes("fit")) return "🏋️";
+  if (lower.includes("protein")) return "💪";
+  if (lower.includes("treat")) return "🍰";
+  if (lower.includes("energize")) return "⚡";
+  if (lower.includes("well") || lower.includes("immune")) return "🌿";
+  if (lower.includes("slim") || lower.includes("weight")) return "🎯";
+  if (lower.includes("regular")) return "🌾";
+
+  return "🥤";
+};
 
 export default function SearchPage() {
   const [query, setQuery] = useState<string>("");
@@ -9,19 +55,24 @@ export default function SearchPage() {
   const [results, setResults] = useState<SearchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAllResults, setShowAllResults] = useState<boolean>(false);
+  const [category, setCategory] = useState<CategoryType>("all");
 
   const handleSearch = async () => {
     if (!query.trim()) return;
 
     setIsLoading(true);
     setError(null);
-    setShowAllResults(false); // Reset toggle on new search
+    setShowAllResults(false);
 
     try {
       const response = await fetch("/api/nutritionSearchRerank", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: query.trim(), topK: 10 }),
+        body: JSON.stringify({
+          query: query.trim(),
+          topK: 10,
+          category,
+        }),
       });
 
       if (!response.ok)
@@ -39,25 +90,82 @@ export default function SearchPage() {
   return (
     <div className="flex flex-col h-screen bg-white">
       {/* Header - Fixed at top */}
-      <header className="border-b border-gray-200 bg-white px-4 py-3 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-3">
-          <Image
-            src="/smoothie-king-logo.svg"
-            alt="BlendIntel"
-            width={32}
-            height={32}
-          />
-          <h1 className="text-xl font-semibold text-gray-900">BlendIntel</h1>
+      <header className="border-b border-gray-200 bg-white px-4 py-3 sticky top-0 z-10">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/smoothie-king-logo.svg"
+              alt="BlendIntel"
+              width={32}
+              height={32}
+            />
+            <h1 className="text-xl font-semibold text-gray-900">BlendIntel</h1>
+          </div>
+          <button
+            onClick={() => {
+              setResults(null);
+              setQuery("");
+              setError(null);
+              setShowAllResults(false);
+            }}
+            className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            New Chat
+          </button>
         </div>
-        <button className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-          New Chat
-        </button>
+
+        {/* Category Filter */}
+        <div className="flex gap-2 items-center overflow-x-auto pb-1">
+          <span className="text-sm text-gray-600 font-medium mr-1 flex-shrink-0">
+            Search:
+          </span>
+          <button
+            onClick={() => setCategory("all")}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0 ${
+              category === "all"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            ⭐ All
+          </button>
+          <button
+            onClick={() => setCategory("smoothies")}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0 ${
+              category === "smoothies"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            🥤 Smoothies
+          </button>
+          <button
+            onClick={() => setCategory("bowls")}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0 ${
+              category === "bowls"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            🍓 Bowls
+          </button>
+          <button
+            onClick={() => setCategory("power-eats")}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0 ${
+              category === "power-eats"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            💪 Power Eats
+          </button>
+        </div>
       </header>
 
       {/* Main content area - Scrollable */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-4 py-8">
-          {/* Empty state - Show when no results */}
+          {/* Empty state */}
           {!results && !isLoading && (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
               <div className="mb-8">
@@ -70,41 +178,126 @@ export default function SearchPage() {
                 />
               </div>
               <h2 className="text-3xl font-semibold text-gray-900 mb-3">
-                What smoothie are you looking for?
+                What are you looking for?
               </h2>
-              <p className="text-gray-600 mb-8 max-w-md">
+              <p className="text-gray-600 mb-2 max-w-md">
                 Ask me anything about nutrition, ingredients, or find the
-                perfect smoothie for your goals
+                perfect{" "}
+                {category === "all"
+                  ? "menu item"
+                  : category === "smoothies"
+                  ? "smoothie"
+                  : category === "bowls"
+                  ? "bowl"
+                  : "power eat"}{" "}
+                for your goals
               </p>
 
-              {/* Suggestion chips */}
+              {/* Active Category Indicator */}
+              <div className="mb-8 px-4 py-2 bg-blue-50 rounded-full border border-blue-200">
+                <span className="text-sm font-medium text-blue-700">
+                  {category === "all" && "⭐ Searching all menu items"}
+                  {category === "smoothies" && "🥤 Searching smoothies only"}
+                  {category === "bowls" && "🍓 Searching bowls only"}
+                  {category === "power-eats" && "💪 Searching power eats only"}
+                </span>
+              </div>
+
+              {/* Category-specific suggestions */}
               <div className="flex flex-wrap gap-2 justify-center max-w-2xl">
-                <button
-                  onClick={() =>
-                    setQuery("High protein smoothie with strawberries")
-                  }
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
-                >
-                  💪 High protein with strawberries
-                </button>
-                <button
-                  onClick={() => setQuery("Low calorie post-workout option")}
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
-                >
-                  🏃 Post-workout recovery
-                </button>
-                <button
-                  onClick={() => setQuery("Vegan smoothie under 300 calories")}
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
-                >
-                  🌱 Vegan under 300 cal
-                </button>
-                <button
-                  onClick={() => setQuery("Something with pineapple")}
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
-                >
-                  🍍 Tropical smoothie
-                </button>
+                {category === "all" && (
+                  <>
+                    <button
+                      onClick={() => setQuery("High protein with strawberries")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      💪 High protein
+                    </button>
+                    <button
+                      onClick={() => setQuery("Low calorie post-workout")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      🏃 Post-workout
+                    </button>
+                    <button
+                      onClick={() => setQuery("Vegan under 300 calories")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      🌱 Vegan option
+                    </button>
+                  </>
+                )}
+
+                {category === "smoothies" && (
+                  <>
+                    <button
+                      onClick={() =>
+                        setQuery("High protein post-workout smoothie")
+                      }
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      💪 High protein
+                    </button>
+                    <button
+                      onClick={() => setQuery("Low calorie fruit smoothie")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      🏃 Low calorie
+                    </button>
+                    <button
+                      onClick={() => setQuery("Something with pineapple")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      🍍 Tropical
+                    </button>
+                  </>
+                )}
+
+                {category === "bowls" && (
+                  <>
+                    <button
+                      onClick={() => setQuery("Bowl with berries and granola")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      🍓 Berry bowl
+                    </button>
+                    <button
+                      onClick={() => setQuery("High fiber breakfast bowl")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      🌾 High fiber
+                    </button>
+                    <button
+                      onClick={() => setQuery("Bowl with peanut butter")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      🥜 PB bowl
+                    </button>
+                  </>
+                )}
+
+                {category === "power-eats" && (
+                  <>
+                    <button
+                      onClick={() => setQuery("High protein breakfast")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      💪 High protein
+                    </button>
+                    <button
+                      onClick={() => setQuery("Quick protein snack")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      ⚡ Quick snack
+                    </button>
+                    <button
+                      onClick={() => setQuery("Healthy toast option")}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    >
+                      🍞 Toast
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -125,12 +318,13 @@ export default function SearchPage() {
               {/* Loading state */}
               {isLoading && (
                 <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
                     <Image
                       src="/smoothie-king-logo.svg"
                       alt="AI"
                       width={20}
                       height={20}
+                      className="brightness-0 invert"
                     />
                   </div>
                   <div className="max-w-[80%] bg-gray-100 rounded-2xl rounded-tl-sm px-5 py-3">
@@ -149,7 +343,17 @@ export default function SearchPage() {
                           style={{ animationDelay: "300ms" }}
                         ></span>
                       </div>
-                      <span className="text-sm text-gray-600">Thinking...</span>
+                      <span className="text-sm text-gray-600">
+                        Searching{" "}
+                        {category === "all"
+                          ? "all items"
+                          : category === "smoothies"
+                          ? "smoothies"
+                          : category === "bowls"
+                          ? "bowls"
+                          : "power eats"}
+                        ...
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -158,27 +362,45 @@ export default function SearchPage() {
               {/* AI Response */}
               {results && !isLoading && (
                 <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-1">
                     <Image
                       src="/smoothie-king-logo.svg"
                       alt="AI"
                       width={20}
                       height={20}
+                      className="brightness-0 invert"
                     />
                   </div>
                   <div className="flex-1 max-w-[80%]">
-                    <div className="bg-gray-100 rounded-2xl rounded-tl-sm px-5 py-4 mb-4">
-                      <p className="text-[15px] leading-relaxed text-gray-800">
+                    <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                      {/* AI Response Text */}
+                      <p className="text-gray-800 text-[15px] leading-relaxed mb-4">
                         {results.aiResponse}
                       </p>
-                    </div>
 
-                    {/* Top Recommendation Card */}
-                    <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      {/* Category Badge */}
+                      <div className="flex items-center gap-2 mb-3">
+                        <span
+                          className={`text-xs font-medium px-2.5 py-1 rounded-full border ${getCategoryColor(
+                            results.topRecommendation.category
+                          )}`}
+                        >
+                          {getCategoryEmoji(results.topRecommendation.category)}{" "}
+                          {results.topRecommendation.category}
+                        </span>
+                        {results.topRecommendation.nutritionSize && (
+                          <span className="text-xs text-gray-500">
+                            {results.topRecommendation.nutritionSize}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="font-semibold text-lg text-gray-900 mb-3">
                         {results.topRecommendation.name}
                       </h3>
-                      <div className="grid grid-cols-4 gap-3 mb-3">
+
+                      {/* Nutrition Grid */}
+                      <div className="grid grid-cols-4 gap-3 mb-4">
                         <div className="text-center">
                           <p className="text-xs text-gray-600 mb-1">Calories</p>
                           <p className="text-lg font-bold text-gray-900">
@@ -204,13 +426,15 @@ export default function SearchPage() {
                           </p>
                         </div>
                       </div>
-                      {results.topRecommendation.allergens.length > 0 && (
-                        <div className="flex gap-2 flex-wrap mb-3">
+
+                      {/* Allergens */}
+                      {results.topRecommendation.allergens?.length > 0 && (
+                        <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-200">
                           {results.topRecommendation.allergens.map(
                             (allergen) => (
                               <span
                                 key={allergen}
-                                className="text-xs bg-red-50 text-red-700 px-2 py-1 rounded-full"
+                                className="text-xs bg-red-50 text-red-700 px-2 py-1 rounded-full border border-red-200"
                               >
                                 ⚠️ {allergen}
                               </span>
@@ -219,8 +443,8 @@ export default function SearchPage() {
                         </div>
                       )}
 
-                      {/* Toggle button to show more results */}
-                      {results.topThree.length > 1 && (
+                      {/* Toggle Button */}
+                      {results.topFive.length > 1 && (
                         <button
                           onClick={() => setShowAllResults(!showAllResults)}
                           className="w-full mt-3 pt-3 border-t border-gray-200 text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center justify-center gap-2 transition-colors"
@@ -234,8 +458,6 @@ export default function SearchPage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
                               >
                                 <polyline points="18 15 12 9 6 15"></polyline>
                               </svg>
@@ -250,80 +472,77 @@ export default function SearchPage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
                               >
                                 <polyline points="6 9 12 15 18 9"></polyline>
                               </svg>
-                              Show {results.topThree.length - 1} more option
-                              {results.topThree.length - 1 > 1 ? "s" : ""}
+                              Show {results.topFive.length - 1} more option
+                              {results.topFive.length - 1 > 1 ? "s" : ""}
                             </>
                           )}
                         </button>
                       )}
                     </div>
 
-                    {/* Other Top Results - Collapsible */}
-                    {showAllResults && results.topThree.length > 1 && (
+                    {/* Collapsible Results */}
+                    {showAllResults && results.topFive.length > 1 && (
                       <div className="mt-4 space-y-3">
-                        {results.topThree.slice(1).map((smoothie, index) => (
+                        {results.topFive.slice(1).map((item, index) => (
                           <div
-                            key={smoothie.id}
-                            className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all animate-in slide-in-from-top-2 duration-200"
-                            style={{ animationDelay: `${index * 50}ms` }}
+                            key={item.id}
+                            className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors animate-slideIn"
+                            style={{
+                              animationDelay: `${index * 50}ms`, // ✅ Keep the delay
+                            }}
                           >
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h4 className="font-semibold text-gray-900 mb-1">
-                                  {smoothie.name}
-                                </h4>
-                                <p className="text-xs text-gray-600">
-                                  {smoothie.category}
-                                </p>
-                              </div>
-                              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                            {/* Category Badge + Rank */}
+                            <div className="flex items-center justify-between mb-2">
+                              <span
+                                className={`text-xs font-medium px-2 py-0.5 rounded-full border ${getCategoryColor(
+                                  item.category
+                                )}`}
+                              >
+                                {getCategoryEmoji(item.category)}{" "}
+                                {item.category}
+                              </span>
+                              <span className="text-xs bg-white text-gray-600 px-2 py-0.5 rounded-full border border-gray-200">
                                 #{index + 2}
                               </span>
                             </div>
-                            <div className="grid grid-cols-4 gap-2">
-                              <div className="text-center">
-                                <p className="text-xs text-gray-500 mb-0.5">
-                                  Cal
-                                </p>
-                                <p className="text-sm font-bold text-gray-900">
-                                  {smoothie.nutrition_calories}
-                                </p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-gray-500 mb-0.5">
-                                  Protein
-                                </p>
-                                <p className="text-sm font-bold text-blue-600">
-                                  {smoothie.nutrition_protein}g
-                                </p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-gray-500 mb-0.5">
-                                  Carbs
-                                </p>
-                                <p className="text-sm font-bold text-green-600">
-                                  {smoothie.nutrition_carbs}g
-                                </p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-gray-500 mb-0.5">
-                                  Fat
-                                </p>
-                                <p className="text-sm font-bold text-yellow-600">
-                                  {smoothie.nutrition_fat}g
-                                </p>
-                              </div>
+
+                            <h4 className="font-semibold text-gray-900 mb-2">
+                              {item.name}
+                            </h4>
+
+                            {item.nutritionSize && (
+                              <p className="text-xs text-gray-600 mb-2">
+                                {item.nutritionSize}
+                              </p>
+                            )}
+
+                            {/* Compact Nutrition */}
+                            <div className="flex flex-wrap gap-2 text-sm mb-3">
+                              <span className="bg-white px-2 py-1 rounded border border-gray-200">
+                                ⚡ {item.nutrition_calories} cal
+                              </span>
+                              <span className="bg-white px-2 py-1 rounded border border-gray-200">
+                                💪 {item.nutrition_protein}g protein
+                              </span>
+                              <span className="bg-white px-2 py-1 rounded border border-gray-200">
+                                🍞 {item.nutrition_carbs}g carbs
+                              </span>
                             </div>
-                            {smoothie.allergens.length > 0 && (
-                              <div className="mt-3 pt-3 border-t border-gray-100">
-                                <p className="text-xs text-gray-500">
-                                  ⚠️ {smoothie.allergens.join(", ")}
-                                </p>
+
+                            {/* Allergens */}
+                            {item.allergens?.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {item.allergens.map((allergen) => (
+                                  <span
+                                    key={allergen}
+                                    className="text-xs bg-red-50 text-red-700 px-2 py-0.5 rounded-full border border-red-200"
+                                  >
+                                    ⚠️ {allergen}
+                                  </span>
+                                ))}
                               </div>
                             )}
                           </div>
@@ -366,7 +585,15 @@ export default function SearchPage() {
                     }
                   }
                 }}
-                placeholder="Message BlendIntel..."
+                placeholder={`Search ${
+                  category === "all"
+                    ? "all menu items"
+                    : category === "smoothies"
+                    ? "smoothies"
+                    : category === "bowls"
+                    ? "bowls"
+                    : "power eats"
+                }...`}
                 rows={1}
                 className="w-full px-4 py-3 pr-12 text-[15px] border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-32"
                 disabled={isLoading}

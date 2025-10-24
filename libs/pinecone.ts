@@ -50,8 +50,9 @@ export async function queryVectors(
   indexName: string,
   vector: number[],
   topK: number = 10,
-  includeMetadata: boolean = true
-): Promise<ScoredPineconeRecord<RecordMetadata>[]> {
+  includeMetadata: boolean = true,
+  filter?: any
+) {
   try {
     const index = pc.index(indexName);
 
@@ -59,9 +60,10 @@ export async function queryVectors(
       vector,
       topK,
       includeMetadata,
+      ...(filter && { filter }), // ✅ ADD THIS - Only include filter if provided
     });
 
-    return queryResponse.matches ?? [];
+    return queryResponse.matches || [];
   } catch (error) {
     console.error("Error querying vectors from Pinecone:", error);
     throw error;
