@@ -15,10 +15,9 @@ BlendIntel Core transforms natural language nutrition queries into personalized 
 - **Natural Language Processing**: Speak naturally - "I need something high in protein after my workout"
 - **Real-time Transcription**: See your spoken query transcribed instantly
 
-### 🏷️ **FDA-Compliant Nutrition Labels**
+### 🏷️ **Nutrition Labels**
 
 - **Pixel-Perfect Rendering**: Professionally formatted nutrition facts display
-- **Daily Value Calculations**: Automatic % DV based on 2,000 calorie diet
 - **Size-Aware Display**: Shows nutrition for selected serving size (20oz, 32oz, 44oz)
 - **Visual Impact**: Instantly recognizable format builds user trust
 
