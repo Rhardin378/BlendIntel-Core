@@ -183,18 +183,6 @@ FormData: { audio: File (webm/mp3) }
 | **Voice-to-Text** | OpenAI Whisper API             | Speech transcription              |
 | **Language**      | TypeScript/JavaScript          | Type-safe development             |
 
-## 📈 Performance Metrics
-
-| Metric                   | Value       | Notes                                     |
-| ------------------------ | ----------- | ----------------------------------------- |
-| **Vector Search**        | ~50-100ms   | Pinecone serverless latency               |
-| **Reranking**            | ~200-400ms  | BGE cross-encoder processing              |
-| **Voice Transcription**  | ~500-1000ms | Depends on audio length                   |
-| **Total Response Time**  | ~1-2s       | Voice to results display                  |
-| **Cost per Voice Query** | ~$0.001     | Whisper ($0.006/min) + RAG ($0.0005)      |
-| **Cost per Text Query**  | ~$0.0005    | Embeddings + rerank + GPT-3.5             |
-| **Accuracy**             | 95%+        | Relevant top-1 results on complex queries |
-
 ## 🧪 Example Queries
 
 | Query                                  | Input Method | Top Result                                  | Why It Works                        |
@@ -206,26 +194,10 @@ FormData: { audio: File (webm/mp3) }
 
 ## 🎨 Frontend Components
 
-### Key React Components
-
-```typescript
-// Voice search with hold-to-record
-<VoiceSearch onSearch={handleSearch} />
-
-// FDA-compliant nutrition label
-<NutritionLabel smoothie={topRecommendation} />
-
-// AI response display
-<ConversationalResponse text={aiResponse} />
-
-// Alternative smoothie cards
-<AlternativeCards smoothies={topThree} />
-```
 
 ### Nutrition Label Features
 
-- ✅ FDA-compliant formatting
-- ✅ % Daily Value calculations
+- ✅ Macros and Calorie Information
 - ✅ Responsive design (mobile-first)
 - ✅ Allergen warnings highlighted
 - ✅ Serving size selector
@@ -249,11 +221,6 @@ PINECONE_API_KEY=...
 <<<<<<< HEAD
 PINECONE_INDEX_NAME=nutrition-information
 
-# Voyage AI (reranking)
-VOYAGE_API_KEY=...
-
-# Optional: Analytics
-NEXT_PUBLIC_GA_ID=...
 =======
 PINECONE_INDEX_NAME=...
 >>>>>>> 27b65cb9c9f5328b01af549c25ab13d69fb65254
@@ -329,7 +296,6 @@ This project demonstrates:
 ### Frontend/UX Engineering
 
 - ✅ Accessible voice input implementation
-- ✅ FDA-compliant nutrition visualization
 - ✅ Responsive, mobile-first design
 - ✅ Real-time user feedback (recording states, loading indicators)
 - ✅ Progressive enhancement (voice OR text input)
@@ -343,40 +309,6 @@ This project demonstrates:
 - ✅ Multimodal user interfaces
 
 ## 🔮 Future Enhancements
-
-### Phase 2: Customization Engine
-
-- **Gladiator scaling rules**: Protein multipliers for size upgrades
-- **Add-on calculations**: Dynamic nutrition recalculation for "extra banana", "extra protein"
-- **Custom modifications**: Handle "no turbinado", "substitute almond milk"
-
-### Phase 3: Enhanced Intelligence
-
-- **Dietary presets**: Auto-detect vegan, keto, low-sugar queries
-- **Workout timing**: Optimize for pre-workout vs. post-workout vs. meal replacement
-- **Personalization**: Save user preferences and favorite smoothies
-- **Trend analysis**: Surface popular smoothies and seasonal recommendations
-
-### Phase 4: Advanced Features
-
-- **Compare mode**: Side-by-side nutrition comparison
-- **Meal planning**: Multi-smoothie combinations for daily nutrition goals
-- **Location finder**: Nearest Smoothie King with real-time inventory
-- **Social sharing**: Share favorite smoothies with nutrition info
-
-## 📊 Project Statistics
-
-- **Smoothies Indexed**: 100+
-- **Vector Dimensions**: 512
-- **Average Query Time**: 1-2 seconds (voice), 0.5-0.8 seconds (text)
-
-### Contribution Ideas
-
-- Add more nutrition data sources (bowls, snacks)
-- Implement compare mode
-- Add dietary restriction filters in UI
-- Improve voice recognition accuracy with custom prompts
-- Create mobile app version (React Native)
 
 ## 📄 License
 
