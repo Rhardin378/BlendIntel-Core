@@ -19,6 +19,7 @@ function SearchPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [showAllResults, setShowAllResults] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryType>("all");
+  const [showIngredients, setShowIngredients] = useState<boolean>(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -484,10 +485,75 @@ function SearchPageContent() {
                   </div>
                   <div className="flex-1 max-w-[80%]">
                     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                      {/* AI Response Text */}
-                      <p className="text-gray-800 text-[15px] leading-relaxed mb-4">
-                        {results.aiResponse}
-                      </p>
+                      {/* AI Response Text - Update this section */}
+                      <div className="space-y-3 mb-4">
+                        {results.aiResponse
+                          .split("\n\n")
+                          .map((paragraph, idx) => {
+                            // Check if it's a numbered item
+                            if (paragraph.match(/^\d+\./)) {
+                              return (
+                                <div
+                                  key={idx}
+                                  className="bg-gray-50 rounded-lg p-3 border-l-4 border-blue-500"
+                                >
+                                  <p className="text-gray-800 text-sm leading-relaxed whitespace-pre-line">
+                                    {paragraph
+                                      .split(/(\*\*.*?\*\*)/)
+                                      .map((part, i) => {
+                                        // Check if this part is wrapped in **
+                                        if (
+                                          part.startsWith("**") &&
+                                          part.endsWith("**")
+                                        ) {
+                                          return (
+                                            <strong
+                                              key={i}
+                                              className="font-semibold text-gray-900"
+                                            >
+                                              {part.slice(2, -2)}
+                                            </strong>
+                                          );
+                                        }
+                                        return <span key={i}>{part}</span>;
+                                      })}
+                                  </p>
+                                </div>
+                              );
+                            }
+
+                            // Regular paragraph with bold support
+                            return (
+                              <p
+                                key={idx}
+                                className="text-gray-700 text-sm leading-relaxed"
+                              >
+                                {paragraph
+                                  .split(/(\*\*.*?\*\*)/)
+                                  .map((part, i) => {
+                                    // Check if this part is wrapped in **
+                                    if (
+                                      part.startsWith("**") &&
+                                      part.endsWith("**")
+                                    ) {
+                                      return (
+                                        <strong
+                                          key={i}
+                                          className="font-semibold text-gray-900"
+                                        >
+                                          {part.slice(2, -2)}
+                                        </strong>
+                                      );
+                                    }
+                                    return <span key={i}>{part}</span>;
+                                  })}
+                              </p>
+                            );
+                          })}
+                      </div>
+
+                      {/* Divider */}
+                      <div className="border-t border-gray-200 mb-4"></div>
 
                       {/* Category Badge */}
                       <div className="flex items-center gap-2 mb-3">
@@ -550,6 +616,38 @@ function SearchPageContent() {
                                 ⚠️ {allergen}
                               </span>
                             )
+                          )}
+                        </div>
+                      )}
+                      {results.topRecommendation.ingredients?.length > 0 && (
+                        <div className="pt-3 border-t border-gray-200">
+                          <button
+                            onClick={() => setShowIngredients(!showIngredients)}
+                            className="w-full flex items-center justify-between text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                          >
+                            <span className="flex items-center gap-2">
+                              🥣 Ingredients (
+                              {results.topRecommendation.ingredients.length})
+                            </span>
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              className={`transition-transform ${
+                                showIngredients ? "rotate-180" : ""
+                              }`}
+                            >
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </button>
+
+                          {showIngredients && (
+                            <div className="mt-2 text-sm text-gray-600 leading-relaxed animate-slideIn">
+                              {results.topRecommendation.ingredients.join(", ")}
+                            </div>
                           )}
                         </div>
                       )}
@@ -696,6 +794,103 @@ function SearchPageContent() {
                               </span>
                               <span className="bg-white px-2 py-1 rounded border border-gray-200">
                                 🍞 {item.nutrition_carbs}g carbs
+                              </span>
+                            </div>
+                            {results.topRecommendation.ingredients?.length >
+                              0 && (
+                              <div className="pt-3 border-t border-gray-200">
+                                <button
+                                  onClick={() =>
+                                    setShowIngredients(!showIngredients)
+                                  }
+                                  className="w-full flex items-center justify-between text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                                >
+                                  <span className="flex items-center gap-2">
+                                    🥣 Ingredients (
+                                    {
+                                      results.topRecommendation.ingredients
+                                        .length
+                                    }
+                                    )
+                                  </span>
+                                  <svg
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    className={`transition-transform ${
+                                      showIngredients ? "rotate-180" : ""
+                                    }`}
+                                  >
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                  </svg>
+                                </button>
+
+                                {showIngredients && (
+                                  <div className="mt-2 text-sm text-gray-600 leading-relaxed animate-slideIn">
+                                    {results.topRecommendation.ingredients.join(
+                                      ", "
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            <div className="flex items-center justify-between pt-3 border-t border-gray-200 mt-3">
+                              <button
+                                onClick={async () => {
+                                  const url = window.location.href;
+                                  try {
+                                    if (navigator.share) {
+                                      // Use Web Share API on mobile
+                                      await navigator.share({
+                                        title: `BlendIntel - ${results.topRecommendation.name}`,
+                                        text: `Check out this ${results.topRecommendation.category}: ${results.topRecommendation.name}`,
+                                        url: url,
+                                      });
+                                    } else {
+                                      // Fallback to clipboard
+                                      await navigator.clipboard.writeText(url);
+                                      // TODO: Add toast notification here
+                                      alert("Link copied to clipboard!");
+                                    }
+                                  } catch (err) {
+                                    console.error("Share failed:", err);
+                                  }
+                                }}
+                                className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1.5 transition-colors"
+                              >
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <circle cx="18" cy="5" r="3"></circle>
+                                  <circle cx="6" cy="12" r="3"></circle>
+                                  <circle cx="18" cy="19" r="3"></circle>
+                                  <line
+                                    x1="8.59"
+                                    y1="13.51"
+                                    x2="15.42"
+                                    y2="17.49"
+                                  ></line>
+                                  <line
+                                    x1="15.41"
+                                    y1="6.51"
+                                    x2="8.59"
+                                    y2="10.49"
+                                  ></line>
+                                </svg>
+                                Share results
+                              </button>
+                              <span className="text-xs text-gray-500">
+                                Demo • Limited searches
                               </span>
                             </div>
 
