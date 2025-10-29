@@ -430,7 +430,7 @@ export default function SearchPage() {
                       {category === "all"
                         ? "items"
                         : category.replace("-", " ")}{" "}
-                      found for "{query}".
+                      found for&ldquo;{query}&rdquo;.
                     </p>
                     <div className="flex flex-wrap gap-2">
                       <button

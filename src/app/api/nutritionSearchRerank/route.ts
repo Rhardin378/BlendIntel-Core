@@ -46,13 +46,14 @@ export async function POST(request: NextRequest) {
     );
 
     // Prepare documents with rich text
-    const documents = results.map((r: any) => ({
+    const documents = results.map((r) => ({
       id: r.id,
       text: [
         r.metadata?.name,
         `Category: ${r.metadata?.category}`,
         r.metadata?.servingSize && `Serving: ${r.metadata.servingSize}`,
-        r.metadata?.availableSizes?.length &&
+        Array.isArray(r.metadata?.availableSizes) &&
+          r.metadata.availableSizes.length > 0 &&
           `Sizes: ${r.metadata.availableSizes.join(", ")}`,
         r.metadata?.nutritionSize &&
           `Nutrition based on: ${r.metadata.nutritionSize}`,
@@ -72,8 +73,8 @@ export async function POST(request: NextRequest) {
 
     const reranked = await rerank(query, documents, topK);
 
-    const rankedDocs = reranked.data.map((item: any) => {
-      const original = results.find((r: any) => r.id === item.document.id);
+    const rankedDocs = reranked.data.map((item) => {
+      const original = results.find((r) => r.id === item.document.id);
       return {
         id: item.document.id,
         score: original?.score || 0,

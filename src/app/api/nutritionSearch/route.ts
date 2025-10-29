@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       true
     );
 
-    const documents = results.map((match: any) => ({
+    const documents = results.map((match) => ({
       id: match.id,
       score: match.score,
       // Nutrition data fields
