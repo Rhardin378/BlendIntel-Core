@@ -63,8 +63,10 @@ export async function POST(request: NextRequest) {
         `Fat: ${r.metadata?.nutrition_fat}g`,
         `Sugar: ${r.metadata?.nutrition_sugar}g`,
         `Fiber: ${r.metadata?.nutrition_fiber}g`,
-        `Ingredients: ${r.metadata?.ingredients?.join(", ")}`,
-        r.metadata?.allergens?.length &&
+        Array.isArray(r.metadata?.ingredients) &&
+          `Ingredients: ${r.metadata.ingredients.join(", ")}`,
+        Array.isArray(r.metadata?.allergens) &&
+          r.metadata.allergens.length > 0 &&
           `Allergens: ${r.metadata.allergens.join(", ")}`,
       ]
         .filter(Boolean)
@@ -73,27 +75,33 @@ export async function POST(request: NextRequest) {
 
     const reranked = await rerank(query, documents, topK);
 
-    const rankedDocs = reranked.data.map((item) => {
-      const original = results.find((r) => r.id === item.document.id);
-      return {
-        id: item.document.id,
-        score: original?.score || 0,
-        rerankScore: item.score,
-        name: original?.metadata?.name,
-        category: original?.metadata?.category,
-        servingSize: original?.metadata?.servingSize,
-        allergens: original?.metadata?.allergens || [],
-        ingredients: original?.metadata?.ingredients || [],
-        availableSizes: original?.metadata?.availableSizes || [],
-        nutritionSize: original?.metadata?.nutritionSize,
-        nutrition_calories: original?.metadata?.nutrition_calories,
-        nutrition_protein: original?.metadata?.nutrition_protein,
-        nutrition_carbs: original?.metadata?.nutrition_carbs,
-        nutrition_fat: original?.metadata?.nutrition_fat,
-        nutrition_sugar: original?.metadata?.nutrition_sugar,
-        nutrition_fiber: original?.metadata?.nutrition_fiber,
-      };
-    });
+    const rankedDocs = reranked.data.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => {
+        const original = results.find(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (r: any) => r.id === item.document.id
+        );
+        return {
+          id: item.document.id,
+          score: original?.score || 0,
+          rerankScore: item.score,
+          name: original?.metadata?.name,
+          category: original?.metadata?.category,
+          servingSize: original?.metadata?.servingSize,
+          allergens: original?.metadata?.allergens || [],
+          ingredients: original?.metadata?.ingredients || [],
+          availableSizes: original?.metadata?.availableSizes || [],
+          nutritionSize: original?.metadata?.nutritionSize,
+          nutrition_calories: original?.metadata?.nutrition_calories,
+          nutrition_protein: original?.metadata?.nutrition_protein,
+          nutrition_carbs: original?.metadata?.nutrition_carbs,
+          nutrition_fat: original?.metadata?.nutrition_fat,
+          nutrition_sugar: original?.metadata?.nutrition_sugar,
+          nutrition_fiber: original?.metadata?.nutrition_fiber,
+        };
+      }
+    );
 
     const topFiveResults = rankedDocs.slice(0, 5);
 
