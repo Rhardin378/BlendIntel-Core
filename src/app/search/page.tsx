@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import { Suspense } from "react";
 import { SearchResponse } from "../types/menuItem";
 import { trackSearch } from "@/lib/analytics";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,7 +10,7 @@ import { useEffect } from "react";
 
 type CategoryType = "all" | "smoothies" | "bowls" | "power-eats";
 
-export default function SearchPage() {
+function SearchPageContent() {
   const [query, setQuery] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>(""); // For input field
 
@@ -729,5 +730,26 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin">
+            <Image
+              src="/smoothie-king-logo.svg"
+              alt="Loading"
+              width={40}
+              height={40}
+            />
+          </div>
+        </div>
+      }
+    >
+      <SearchPageContent />
+    </Suspense>
   );
 }
