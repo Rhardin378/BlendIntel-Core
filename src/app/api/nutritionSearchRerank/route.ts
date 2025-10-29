@@ -7,8 +7,74 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
 });
 
+// Rate limiter storage
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+// Rate limit configuration
+const RATE_LIMIT = 10; // requests per window
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+
+function getRateLimitKey(request: NextRequest): string {
+  // Get IP from headers (works with Vercel)
+  const forwarded = request.headers.get("x-forwarded-for");
+  const ip = forwarded ? forwarded.split(",")[0] : "unknown";
+  return ip;
+}
+
+function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+
+  // Clean up expired entries periodically
+  if (rateLimitMap.size > 1000) {
+    for (const [key, value] of rateLimitMap.entries()) {
+      if (now > value.resetTime) {
+        rateLimitMap.delete(key);
+      }
+    }
+  }
+
+  if (!record || now > record.resetTime) {
+    // First request or window expired
+    rateLimitMap.set(ip, {
+      count: 1,
+      resetTime: now + RATE_LIMIT_WINDOW,
+    });
+    return { allowed: true, remaining: RATE_LIMIT - 1 };
+  }
+
+  if (record.count >= RATE_LIMIT) {
+    // Rate limit exceeded
+    return { allowed: false, remaining: 0 };
+  }
+
+  // Increment count
+  record.count++;
+  return { allowed: true, remaining: RATE_LIMIT - record.count };
+}
+
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit
+    const ip = getRateLimitKey(request);
+    const { allowed, remaining } = checkRateLimit(ip);
+
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded. Please try again later.",
+          retryAfter: RATE_LIMIT_WINDOW / 1000, // seconds
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": RATE_LIMIT.toString(),
+            "X-RateLimit-Remaining": "0",
+            "Retry-After": (RATE_LIMIT_WINDOW / 1000).toString(),
+          },
+        }
+      );
+    }
     const { query, topK = 10, category = "all" } = await request.json();
 
     const queryEmbedding = await createEmbedding(query, 512);
@@ -136,16 +202,24 @@ export async function POST(request: NextRequest) {
       max_tokens: 250,
     });
 
-    return NextResponse.json({
-      query,
-      category,
-      topRecommendation: topFiveResults[0],
-      topFive: topFiveResults,
-      allResults: rankedDocs,
-      total: rankedDocs.length,
-      aiResponse: response.choices[0].message.content,
-      reranked: true,
-    });
+    return NextResponse.json(
+      {
+        query,
+        category,
+        topRecommendation: topFiveResults[0],
+        topFive: topFiveResults,
+        allResults: rankedDocs,
+        total: rankedDocs.length,
+        aiResponse: response.choices[0].message.content,
+        reranked: true,
+      },
+      {
+        headers: {
+          "X-RateLimit-Limit": RATE_LIMIT.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+        },
+      }
+    );
   } catch (error) {
     console.error("Search error:", error);
     return NextResponse.json(
