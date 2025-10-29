@@ -2,74 +2,113 @@
 import Image from "next/image";
 import { useState } from "react";
 import { SearchResponse } from "../types/menuItem";
+import { trackSearch } from "@/lib/analytics";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getCategoryColor, getCategoryEmoji } from "../utils/categoryHelpers";
 import { useEffect } from "react";
 
 type CategoryType = "all" | "smoothies" | "bowls" | "power-eats";
 
-// Helper function to get category colors
-const getCategoryColor = (category: string) => {
-  const lower = category.toLowerCase();
-
-  if (lower.includes("bowl")) {
-    return "bg-purple-100 text-purple-700 border-purple-200";
-  } else if (lower === "power eats") {
-    return "bg-orange-100 text-orange-700 border-orange-200";
-  } else if (lower.includes("fit") || lower.includes("protein")) {
-    return "bg-blue-100 text-blue-700 border-blue-200";
-  } else if (lower.includes("treat") || lower.includes("indulge")) {
-    return "bg-pink-100 text-pink-700 border-pink-200";
-  } else if (lower.includes("energize") || lower.includes("energy")) {
-    return "bg-yellow-100 text-yellow-700 border-yellow-200";
-  } else if (lower.includes("well") || lower.includes("immune")) {
-    return "bg-green-100 text-green-700 border-green-200";
-  } else if (lower.includes("slim") || lower.includes("weight")) {
-    return "bg-teal-100 text-teal-700 border-teal-200";
-  } else if (lower.includes("regular")) {
-    return "bg-amber-100 text-amber-700 border-amber-200";
-  }
-
-  return "bg-gray-100 text-gray-700 border-gray-200";
-};
-
-// Helper function to get category emoji
-const getCategoryEmoji = (category: string) => {
-  const lower = category.toLowerCase();
-
-  if (lower.includes("bowl")) return "🍓";
-  if (lower === "power eats") return "💪";
-  if (lower.includes("fit")) return "🏋️";
-  if (lower.includes("protein")) return "💪";
-  if (lower.includes("treat")) return "🍰";
-  if (lower.includes("energize")) return "⚡";
-  if (lower.includes("well") || lower.includes("immune")) return "🌿";
-  if (lower.includes("slim") || lower.includes("weight")) return "🎯";
-  if (lower.includes("regular")) return "🌾";
-
-  return "🥤";
-};
-
 export default function SearchPage() {
   const [query, setQuery] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>(""); // For input field
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [results, setResults] = useState<SearchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAllResults, setShowAllResults] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryType>("all");
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  // Load from URL on mount
+  useEffect(() => {
+    const urlCat = searchParams.get("cat") as CategoryType | null;
+    const urlQ = searchParams.get("q") || null;
+
+    if (
+      urlCat &&
+      ["all", "smoothies", "bowls", "power-eats"].includes(urlCat)
+    ) {
+      setCategory(urlCat);
+    } else {
+      const saved = localStorage.getItem(
+        "blendintel.category"
+      ) as CategoryType | null;
+      if (saved) setCategory(saved);
+    }
+
+    // If we have a query in URL, set it and trigger search
+    if (urlQ) {
+      setQuery(urlQ);
+      setInputValue(urlQ); // Set input value too
+
+      // Auto-trigger search
+      const autoSearch = async () => {
+        const startTime = Date.now();
+
+        setIsLoading(true);
+        setError(null);
+        setShowAllResults(false);
+
+        try {
+          const response = await fetch("/api/nutritionSearchRerank", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              query: urlQ.trim(),
+              topK: 10,
+              category: urlCat || "all",
+            }),
+          });
+
+          if (!response.ok)
+            throw new Error(`Search failed: ${response.statusText}`);
+
+          const data: SearchResponse = await response.json();
+          setResults(data);
+          trackSearch(
+            urlQ.trim(),
+            urlCat || "all",
+            data.total,
+            Date.now() - startTime
+          );
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Search failed");
+          // Track failed URL-based search
+          trackSearch(urlQ.trim(), urlCat || "all", 0, Date.now() - startTime);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      autoSearch();
+    }
+  }, []); // Only run on mount
+
   const handleSearch = async () => {
-    if (!query.trim()) return;
+    const startTime = Date.now();
+
+    if (!inputValue.trim()) return;
+
+    setQuery(inputValue.trim()); // Update query for URL/state
+    setInputValue(""); // Clear input field
 
     setIsLoading(true);
     setError(null);
     setShowAllResults(false);
+
+    const params = new URLSearchParams();
+    params.set("q", inputValue.trim());
+    params.set("cat", category);
+    router.replace(`/search?${params.toString()}`);
 
     try {
       const response = await fetch("/api/nutritionSearchRerank", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: query.trim(),
+          query: inputValue.trim(),
           topK: 10,
           category,
         }),
@@ -80,8 +119,24 @@ export default function SearchPage() {
 
       const data: SearchResponse = await response.json();
       setResults(data);
+
+      // Track successful search
+      trackSearch(
+        inputValue.trim(),
+        category,
+        data.total,
+        Date.now() - startTime
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Search failed");
+
+      // Track failed search
+      trackSearch(
+        inputValue.trim(),
+        category,
+        0, // No results on error
+        Date.now() - startTime
+      );
     } finally {
       setIsLoading(false);
     }
@@ -208,19 +263,21 @@ export default function SearchPage() {
                 {category === "all" && (
                   <>
                     <button
-                      onClick={() => setQuery("High protein with strawberries")}
+                      onClick={() =>
+                        setInputValue("High protein with strawberries")
+                      }
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       💪 High protein
                     </button>
                     <button
-                      onClick={() => setQuery("Low calorie post-workout")}
+                      onClick={() => setInputValue("Low calorie post-workout")}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       🏃 Post-workout
                     </button>
                     <button
-                      onClick={() => setQuery("Vegan under 300 calories")}
+                      onClick={() => setInputValue("Vegan under 300 calories")}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       🌱 Vegan option
@@ -232,20 +289,22 @@ export default function SearchPage() {
                   <>
                     <button
                       onClick={() =>
-                        setQuery("High protein post-workout smoothie")
+                        setInputValue("High protein post-workout smoothie")
                       }
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       💪 High protein
                     </button>
                     <button
-                      onClick={() => setQuery("Low calorie fruit smoothie")}
+                      onClick={() =>
+                        setInputValue("Low calorie fruit smoothie")
+                      }
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       🏃 Low calorie
                     </button>
                     <button
-                      onClick={() => setQuery("Something with pineapple")}
+                      onClick={() => setInputValue("Something with pineapple")}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       🍍 Tropical
@@ -256,19 +315,21 @@ export default function SearchPage() {
                 {category === "bowls" && (
                   <>
                     <button
-                      onClick={() => setQuery("Bowl with berries and granola")}
+                      onClick={() =>
+                        setInputValue("Bowl with berries and granola")
+                      }
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       🍓 Berry bowl
                     </button>
                     <button
-                      onClick={() => setQuery("High fiber breakfast bowl")}
+                      onClick={() => setInputValue("High fiber breakfast bowl")}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       🌾 High fiber
                     </button>
                     <button
-                      onClick={() => setQuery("Bowl with peanut butter")}
+                      onClick={() => setInputValue("Bowl with peanut butter")}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       🥜 PB bowl
@@ -279,19 +340,19 @@ export default function SearchPage() {
                 {category === "power-eats" && (
                   <>
                     <button
-                      onClick={() => setQuery("High protein breakfast")}
+                      onClick={() => setInputValue("High protein breakfast")}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       💪 High protein
                     </button>
                     <button
-                      onClick={() => setQuery("Quick protein snack")}
+                      onClick={() => setInputValue("Quick protein snack")}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       ⚡ Quick snack
                     </button>
                     <button
-                      onClick={() => setQuery("Healthy toast option")}
+                      onClick={() => setInputValue("Healthy toast option")}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
                     >
                       🍞 Toast
@@ -354,6 +415,38 @@ export default function SearchPage() {
                           : "power eats"}
                         ...
                       </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {results && !isLoading && results.total === 0 && (
+                <div className="flex gap-3 w-full mt-4">
+                  <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
+                    🤔
+                  </div>
+                  <div className="flex-1 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                    <p className="text-gray-800 text-sm mb-2">
+                      No{" "}
+                      {category === "all"
+                        ? "items"
+                        : category.replace("-", " ")}{" "}
+                      found for "{query}".
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => setCategory("all")}
+                        className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                      >
+                        Search all categories →
+                      </button>
+                      <button
+                        onClick={() =>
+                          setQuery(query.split(" ").slice(0, 2).join(" "))
+                        }
+                        className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                      >
+                        Try broader terms
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -575,12 +668,12 @@ export default function SearchPage() {
           <div className="flex gap-3 items-end">
             <div className="flex-1 relative">
               <textarea
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    if (!isLoading && query.trim()) {
+                    if (!isLoading && inputValue.trim()) {
                       handleSearch();
                     }
                   }
@@ -602,7 +695,7 @@ export default function SearchPage() {
             </div>
             <button
               onClick={handleSearch}
-              disabled={isLoading || !query.trim()}
+              disabled={isLoading || !inputValue.trim()}
               className="w-10 h-10 flex items-center justify-center bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex-shrink-0"
             >
               {isLoading ? (

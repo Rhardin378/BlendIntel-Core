@@ -4,6 +4,7 @@ export interface MenuItem {
   rerankedScore?: number;
   name: string;
   category: string;
+  nutritionSize?: string;
   servingSize: string;
   allergens: string[];
   ingredients: string[];
@@ -18,6 +19,7 @@ export interface MenuItem {
 
 export interface SearchResponse {
   query: string;
+  category?: string;
   topRecommendation: MenuItem;
   topFive: MenuItem[];
   allResults: MenuItem[];
