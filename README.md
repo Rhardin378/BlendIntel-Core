@@ -92,7 +92,7 @@ Frontend Display:
 
 ### 1. **Web Scraping**
 
-- Scraped 300+ Smoothie King menu items with complete nutrition profiles
+- Scraped 100+ Smoothie King menu items with complete nutrition profiles
 - Extracted size variations, ingredients, allergens, and macros
 
 ### 2. **Vector Generation**
