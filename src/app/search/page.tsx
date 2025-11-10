@@ -19,7 +19,7 @@ function SearchPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [showAllResults, setShowAllResults] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryType>("all");
-  const [showIngredients, setShowIngredients] = useState<boolean>(false);
+  const [expandedIngredients, setExpandedIngredients] = useState<Set<string>>(new Set());
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -622,7 +622,15 @@ function SearchPageContent() {
                       {results.topRecommendation.ingredients?.length > 0 && (
                         <div className="pt-3 border-t border-gray-200">
                           <button
-                            onClick={() => setShowIngredients(!showIngredients)}
+                            onClick={() => {
+                              const newExpanded = new Set(expandedIngredients);
+                              if (newExpanded.has(results.topRecommendation.id)) {
+                                newExpanded.delete(results.topRecommendation.id);
+                              } else {
+                                newExpanded.add(results.topRecommendation.id);
+                              }
+                              setExpandedIngredients(newExpanded);
+                            }}
                             className="w-full flex items-center justify-between text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
                           >
                             <span className="flex items-center gap-2">
@@ -637,14 +645,14 @@ function SearchPageContent() {
                               stroke="currentColor"
                               strokeWidth="2"
                               className={`transition-transform ${
-                                showIngredients ? "rotate-180" : ""
+                                expandedIngredients.has(results.topRecommendation.id) ? "rotate-180" : ""
                               }`}
                             >
                               <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                           </button>
 
-                          {showIngredients && (
+                          {expandedIngredients.has(results.topRecommendation.id) && (
                             <div className="mt-2 text-sm text-gray-600 leading-relaxed animate-slideIn">
                               {results.topRecommendation.ingredients.join(", ")}
                             </div>
@@ -800,9 +808,15 @@ function SearchPageContent() {
                               0 && (
                               <div className="pt-3 border-t border-gray-200">
                                 <button
-                                  onClick={() =>
-                                    setShowIngredients(!showIngredients)
-                                  }
+                                  onClick={() => {
+                                    const newExpanded = new Set(expandedIngredients);
+                                    if (newExpanded.has(item.id)) {
+                                      newExpanded.delete(item.id);
+                                    } else {
+                                      newExpanded.add(item.id);
+                                    }
+                                    setExpandedIngredients(newExpanded);
+                                  }}
                                   className="w-full flex items-center justify-between text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
                                 >
                                   <span className="flex items-center gap-2">
@@ -821,14 +835,14 @@ function SearchPageContent() {
                                     stroke="currentColor"
                                     strokeWidth="2"
                                     className={`transition-transform ${
-                                      showIngredients ? "rotate-180" : ""
+                                      expandedIngredients.has(item.id) ? "rotate-180" : ""
                                     }`}
                                   >
                                     <polyline points="6 9 12 15 18 9"></polyline>
                                   </svg>
                                 </button>
 
-                                {showIngredients && (
+                                {expandedIngredients.has(item.id) && (
                                   <div className="mt-2 text-sm text-gray-600 leading-relaxed animate-slideIn">
                                     {item.ingredients.join(
                                       ", "
