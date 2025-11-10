@@ -796,7 +796,7 @@ function SearchPageContent() {
                                 🍞 {item.nutrition_carbs}g carbs
                               </span>
                             </div>
-                            {results.topRecommendation.ingredients?.length >
+                            {item.ingredients?.length >
                               0 && (
                               <div className="pt-3 border-t border-gray-200">
                                 <button
@@ -808,7 +808,7 @@ function SearchPageContent() {
                                   <span className="flex items-center gap-2">
                                     🥣 Ingredients (
                                     {
-                                      results.topRecommendation.ingredients
+                                      item.ingredients
                                         .length
                                     }
                                     )
@@ -830,7 +830,7 @@ function SearchPageContent() {
 
                                 {showIngredients && (
                                   <div className="mt-2 text-sm text-gray-600 leading-relaxed animate-slideIn">
-                                    {results.topRecommendation.ingredients.join(
+                                    {item.ingredients.join(
                                       ", "
                                     )}
                                   </div>
