@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer");
 const fs = require("fs");
 
 const NUTRITION_SIZE_LABELS = {
+  12: "small(12 oz)",
   20: "small(20 oz)",
   32: "medium(32 oz)",
   44: "large(44 oz)",
@@ -137,7 +138,11 @@ const scrapeSmoothieMenu = async () => {
           const sizeLabel = await tabButtons[i].evaluate((btn) =>
             btn.querySelector("span:not(.visually-hidden)")?.textContent.trim()
           );
-          const mappedLabel = NUTRITION_SIZE_LABELS[sizeLabel] || sizeLabel;
+          // Parse the size label and map it properly
+          const parsedSize = parseInt(sizeLabel, 10);
+          const mappedLabel = NUTRITION_SIZE_LABELS[parsedSize] || 
+                              NUTRITION_SIZE_LABELS[sizeLabel] || 
+                              sizeLabel;
 
           // Nutrition callouts
           let nutritionInfo = {
