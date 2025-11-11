@@ -30,17 +30,51 @@ function sanitizeMetadata(raw) {
   if (raw.sizeInformation && typeof raw.sizeInformation === "object") {
     const sizes = Object.keys(raw.sizeInformation);
 
-    // Store available sizes as array
-    meta.availableSizes = sizes;
+    // Store available sizes as array (only properly formatted ones)
+    meta.availableSizes = sizes.filter((s) => s.includes("(") || s === "12");
 
     // Get the default size for nutrition display
     const defaultSize =
       sizes.find((s) => s.includes("medium")) ||
+      sizes.find((s) => s.includes("32")) ||
+      sizes.find((s) => s.includes("small")) ||
       sizes.find((s) => s.includes("20")) ||
       sizes[0];
 
     // Store which size the nutrition data represents
-    meta.nutritionSize = defaultSize;
+    // Ensure it's properly formatted
+    if (defaultSize) {
+      // If it's already properly formatted (contains parentheses), use it as-is
+      if (defaultSize.includes("(") && defaultSize.includes("oz)")) {
+        meta.nutritionSize = defaultSize;
+      } else if (defaultSize === "12") {
+        meta.nutritionSize = "small(12 oz)";
+      } else if (defaultSize === "bowl") {
+        meta.nutritionSize = "bowl";
+      } else {
+        // Try to extract size number and normalize
+        const sizeMatch = defaultSize.match(/(\d+)/);
+        if (sizeMatch) {
+          let sizeNum = parseInt(sizeMatch[1], 10);
+          
+          // Handle common typos: 320 -> 32, 200 -> 20, 440 -> 44
+          if (sizeNum === 320) sizeNum = 32;
+          if (sizeNum === 200) sizeNum = 20;
+          if (sizeNum === 440) sizeNum = 44;
+          
+          const sizeMap = {
+            12: "small(12 oz)",
+            20: "small(20 oz)",
+            32: "medium(32 oz)",
+            44: "large(44 oz)"
+          };
+          meta.nutritionSize = sizeMap[sizeNum] || defaultSize;
+        } else {
+          // Fallback to original value
+          meta.nutritionSize = defaultSize;
+        }
+      }
+    }
 
     if (defaultSize) {
       const sizeData = raw.sizeInformation[defaultSize];
