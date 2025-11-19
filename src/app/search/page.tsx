@@ -1,3 +1,4 @@
+"use client";
 import { Suspense } from "react";
 import { SearchProvider } from "@/contexts/SearchContext";
 import { SearchPageContent } from "./SearchPageContent";
