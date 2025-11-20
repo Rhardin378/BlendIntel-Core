@@ -1,4 +1,5 @@
 "use client";
+
 import {
   createContext,
   useContext,
@@ -6,6 +7,7 @@ import {
   useCallback,
   useEffect,
   ReactNode,
+  useRef, // ✅ Add this import
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SearchResponse } from "@/app/types/menuItem";
@@ -56,11 +58,15 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     new Set()
   );
 
+  // ✅ Track if we've already searched for this query
+  const lastSearchedQuery = useRef<string>("");
+
   // URL sync effect
   useEffect(() => {
     const urlCat = searchParams.get("cat") as CategoryType | null;
     const urlQ = searchParams.get("q") || null;
 
+    // Update category
     if (
       urlCat &&
       ["all", "smoothies", "bowls", "power-eats"].includes(urlCat)
@@ -73,11 +79,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       if (saved) setCategory(saved);
     }
 
-    if (urlQ) {
+    // Only auto-search if query changed AND we haven't searched for it yet
+    if (urlQ && urlQ !== lastSearchedQuery.current) {
+      lastSearchedQuery.current = urlQ; // ✅ Mark as searched
       setQuery(urlQ);
       setInputValue(urlQ);
-      // Auto-search logic here
-      // Auto-search if we have a query from URL
+
       const autoSearch = async () => {
         setIsLoading(true);
         try {
@@ -87,7 +94,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
             body: JSON.stringify({
               query: urlQ,
               topK: 10,
-              category: urlCat || category,
+              category: urlCat || "all",
             }),
           });
 
@@ -104,7 +111,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
 
       autoSearch();
     }
-  }, []);
+  }, [searchParams]); // ✅ Only depend on searchParams
 
   // Category persistence
   useEffect(() => {
@@ -118,14 +125,18 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     const startTime = Date.now();
     if (!inputValue.trim()) return;
 
-    setQuery(inputValue.trim());
+    const trimmedQuery = inputValue.trim();
+    setQuery(trimmedQuery);
     setInputValue("");
     setIsLoading(true);
     setError(null);
     setShowAllResults(false);
 
+    // ✅ Update last searched query
+    lastSearchedQuery.current = trimmedQuery;
+
     const params = new URLSearchParams();
-    params.set("q", inputValue.trim());
+    params.set("q", trimmedQuery);
     params.set("cat", category);
     router.replace(`/search?${params.toString()}`);
 
@@ -134,7 +145,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: inputValue.trim(),
+          query: trimmedQuery,
           topK: 10,
           category,
         }),
@@ -154,15 +165,10 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       const data: SearchResponse = await response.json();
       setResults(data);
 
-      trackSearch(
-        inputValue.trim(),
-        category,
-        data.total,
-        Date.now() - startTime
-      );
+      trackSearch(trimmedQuery, category, data.total, Date.now() - startTime);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Search failed");
-      trackSearch(inputValue.trim(), category, 0, Date.now() - startTime);
+      trackSearch(trimmedQuery, category, 0, Date.now() - startTime);
     } finally {
       setIsLoading(false);
     }
@@ -187,6 +193,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     setError(null);
     setShowAllResults(false);
     setExpandedIngredients(new Set());
+    lastSearchedQuery.current = ""; // ✅ Reset ref
     router.replace("/search");
   }, [router]);
 
