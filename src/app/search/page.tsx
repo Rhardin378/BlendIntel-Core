@@ -3,6 +3,9 @@ import { Suspense } from "react";
 import { SearchProvider } from "@/contexts/SearchContext";
 import { SearchPageContent } from "./SearchPageContent";
 
+export const dynamic = "force-dynamic";
+export const runtime = "edge"; // Optional: Use edge runtime for faster cold starts
+
 function SearchLoadingFallback() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
