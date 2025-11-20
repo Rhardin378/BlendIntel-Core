@@ -342,6 +342,42 @@ MIT
 
 ---
 
+## 🏗️ Component Architecture
+
+BlendIntel uses a **modular component architecture** with centralized state management for maintainability and scalability.
+
+### 📁 Component Structure
+
+```
+src/app/search/components/
+├── layout/          # Page structure (header, filter, input)
+├── states/          # Loading, error, empty states
+├── messages/        # Chat interface components
+├── results/         # Search result display
+└── shared/          # Reusable UI components
+```
+
+### 🧠 State Management Strategy
+
+**Context API** (`SearchContext`) manages:
+
+- Search query and results
+- Loading/error states
+- Category selection
+- UI state (expanded items, show all results)
+
+**Props** for pure display components:
+
+- `NutritionGrid`, `AllergenBadges`, `CategoryBadge`
+- Better testability and reusability
+
+### 🎯 Adding New Components
+
+1. Determine if state comes from **Context** or **Props**
+2. Create component in appropriate directory
+3. Add to barrel export (`index.ts`)
+4. Import and use in parent component
+
 **Built with ❤️ for nutrition-conscious smoothie lovers**
 
 _Combining the power of RAG, semantic search, and thoughtful UX design to make healthy choices effortless._
