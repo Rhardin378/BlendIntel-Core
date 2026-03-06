@@ -30,7 +30,7 @@ export function SearchInput() {
               }}
               placeholder={placeholder}
               rows={1}
-              className="w-full px-4 py-3 text-[15px] border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-4 py-3 text-[15px] text-gray-800 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               disabled={isLoading}
             />
           </div>
@@ -62,7 +62,7 @@ export function SearchInput() {
             )}
           </button>
         </div>
-        <p className="text-xs text-gray-500 text-center mt-2">
+        <p className="text-xs text-gray-700 text-center mt-2">
           BlendIntel can make mistakes. Check nutrition facts.
         </p>
       </div>

@@ -51,13 +51,13 @@ export const ResultCard = memo(function ResultCard({
       )}
 
       <div className="flex flex-wrap gap-2 text-sm mb-3">
-        <span className="bg-white px-2 py-1 rounded border border-gray-200">
+        <span className="bg-white px-2 py-1 rounded border border-gray-200 text-gray-800">
           ⚡ {item.nutrition_calories} cal
         </span>
-        <span className="bg-white px-2 py-1 rounded border border-gray-200">
+        <span className="bg-white px-2 py-1 rounded border border-gray-200 text-gray-800">
           💪 {item.nutrition_protein}g protein
         </span>
-        <span className="bg-white px-2 py-1 rounded border border-gray-200">
+        <span className="bg-white px-2 py-1 rounded border border-gray-200 text-gray-800">
           🍞 {item.nutrition_carbs}g carbs
         </span>
       </div>
